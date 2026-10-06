@@ -65,7 +65,7 @@ export function NavLink({
 /** Text wordmark: "HITEX 26" set in the display face; white on the always-dark navigation bar. */
 function BrandMark() {
   return (
-    <NavLink view="overview" className="group flex items-baseline gap-2 rounded-lg" aria-label="HITEX 26 Conference Explorer, overview">
+    <NavLink view="overview" onNavigate={() => window.scrollTo({ top: 0 })} className="group flex items-baseline gap-2 rounded-lg" aria-label="HITEX 26 Conference Explorer, overview">
       <span className="text-[19px] font-extrabold leading-none tracking-[-0.04em] text-white" style={{ fontFamily: "var(--font-display)" }}>
         HITEX<span className="ml-[0.28em] text-accent">26</span>
       </span>

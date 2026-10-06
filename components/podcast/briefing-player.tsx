@@ -26,7 +26,7 @@ export function BriefingPlayer() {
 
 function PlayerDialog({ date }: { date: string }) {
   const { engine, close, open } = usePodcast();
-  const { set } = useNav();
+  const { set, go, href } = useNav();
   const ep = episodeByDate.get(date)!;
   const state = useEngineState();
   const [mode, setMode] = useState<"live" | "transcript">("live");
@@ -102,9 +102,20 @@ function PlayerDialog({ date }: { date: string }) {
         {/* Top bar */}
         <div className="mx-auto flex w-full max-w-[1180px] items-center gap-3 px-4 pt-3 md:px-8 md:pt-5">
           <div className="flex min-w-0 items-baseline gap-2">
-            <span className="text-[17px] font-extrabold leading-none tracking-[-0.04em]" style={{ fontFamily: "var(--font-display)" }}>
+            <a
+              href={href("overview")}
+              aria-label="HITEX 26, back to home"
+              onClick={(e) => {
+                if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+                e.preventDefault();
+                go("overview");
+                window.scrollTo({ top: 0 });
+              }}
+              className="rounded-md text-[17px] font-extrabold leading-none tracking-[-0.04em]"
+              style={{ fontFamily: "var(--font-display)" }}
+            >
               HITEX<span className="ml-[0.26em] text-[#ff4d66]">26</span>
-            </span>
+            </a>
             <span className="truncate border-l border-white/25 pl-2 text-[12.5px] font-medium leading-none text-white/70">Day briefings</span>
           </div>
           <div className="ml-auto flex items-center gap-2">

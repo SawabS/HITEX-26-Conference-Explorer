@@ -190,17 +190,17 @@ function Participants({ s, people, onOpen }: { s: Session; people: Speaker[]; on
     <button onClick={() => onOpen(p)} className="group flex w-full min-w-0 items-center gap-3 rounded-xl p-2 text-left transition hover:bg-surface-2">
       <Avatar speaker={p} size={44} />
       <span className="min-w-0 flex-1">
-        <span className="flex items-center gap-2">
-          <span className="truncate text-[14px] font-semibold text-fg">{p.name}</span>
+        <span className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
+          <span className="min-w-0 break-words text-[14px] font-semibold text-fg">{p.name}</span>
           {role === "Moderator" && <span className="rounded border border-line-strong px-1 text-[10px] font-medium uppercase tracking-wide text-muted">Mod</span>}
         </span>
-        <span className="line-clamp-2 text-[12.5px] leading-snug text-muted">{p.title ?? "Title not publicly listed"}</span>
+        <span className="mt-1 block break-words text-[12.5px] leading-snug text-muted">{p.title ?? "Title not publicly listed"}</span>
       </span>
     </button>
   );
 
   return (
-    <section aria-labelledby="sd-people">
+    <section aria-labelledby="sd-people" className="min-w-0 [overflow-wrap:anywhere]">
       <div className="mb-2 flex items-center justify-between">
         <h3 id="sd-people" className="eyebrow">
           {isGroup ? `On stage · ${people.length}` : "Presenter"}
@@ -223,9 +223,9 @@ function Participants({ s, people, onOpen }: { s: Session; people: Speaker[]; on
               {mods.map((p) => <Person key={p.id} p={p} role="Moderator" />)}
             </div>
           )}
-          <div className={`grid gap-1 ${mods.length ? "mt-2" : ""} ${guests.length > 1 ? "sm:grid-cols-2" : ""}`}>
+          <div className={`grid min-w-0 grid-cols-1 gap-1 ${mods.length ? "mt-2" : ""} ${guests.length > 1 ? "sm:grid-cols-2" : ""}`}>
             {guests.map((p) => (
-              <div key={p.id} className="rounded-xl bg-surface p-1">
+              <div key={p.id} className="min-w-0 rounded-xl bg-surface p-1">
                 <Person p={p} role="Speaker" />
               </div>
             ))}
@@ -261,7 +261,7 @@ function Participants({ s, people, onOpen }: { s: Session; people: Speaker[]; on
 function PresenterProfile({ p, role, onOpen }: { p: Speaker; role: string; onOpen: () => void }) {
   const other = (sessionsBySpeaker.get(p.id) ?? []).length - 1;
   return (
-    <article className="rounded-xl border border-line p-4">
+    <article className="min-w-0 rounded-xl border border-line p-4 [overflow-wrap:anywhere]">
       <div className="flex items-start gap-3">
         <Avatar speaker={p} size={52} />
         <div className="min-w-0 flex-1">
@@ -280,7 +280,7 @@ function PresenterProfile({ p, role, onOpen }: { p: Speaker; role: string; onOpe
       {p.expertise.length > 0 && (
         <div className="mt-3 flex flex-wrap gap-1">
           {p.expertise.map((e) => (
-            <span key={e} className="rounded-md bg-surface-2 px-2 py-0.5 text-[11.5px] text-fg-2">{e}</span>
+            <span key={e} className="min-w-0 max-w-full rounded-md bg-surface-2 px-2 py-0.5 text-[11.5px] text-fg-2">{e}</span>
           ))}
         </div>
       )}

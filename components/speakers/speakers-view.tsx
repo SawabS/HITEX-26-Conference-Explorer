@@ -169,24 +169,24 @@ export function SpeakersView() {
 function SpeakerCard({ sp, onOpen }: { sp: Speaker; onOpen: () => void }) {
   const list = sessionsBySpeaker.get(sp.id) ?? [];
   return (
-    <button onClick={onOpen} className="panel group flex h-full w-full flex-col p-4 text-left transition hover:-translate-y-0.5 hover:border-line-strong hover:shadow-2">
-      <div className="flex items-start gap-3.5">
+    <button onClick={onOpen} className="panel group flex h-full w-full min-w-0 flex-col [overflow-wrap:anywhere] p-4 text-left transition hover:-translate-y-0.5 hover:border-line-strong hover:shadow-2">
+      <div className="flex w-full min-w-0 items-start gap-3.5">
         <Avatar speaker={sp} size={60} />
         <div className="min-w-0 flex-1">
           <p className="text-[15.5px] font-semibold leading-tight tracking-tight">{sp.name}</p>
-          <p className="mt-1 line-clamp-2 text-[12.5px] leading-snug text-muted">{sp.title ?? "Title not publicly listed"}</p>
-          <p className="mt-1 truncate text-[12.5px] font-medium text-fg-2">{sp.organization ?? <span className="font-normal text-faint">Organisation not listed</span>}</p>
+          <p className="mt-1 text-[12.5px] leading-snug text-muted">{sp.title ?? "Title not publicly listed"}</p>
+          <p className="mt-1 text-[12.5px] font-medium text-fg-2">{sp.organization ?? <span className="font-normal text-faint">Organisation not listed</span>}</p>
         </div>
       </div>
       {sp.expertise.length > 0 && (
         <div className="mt-3 flex flex-wrap gap-1">
           {sp.expertise.slice(0, 3).map((e) => (
-            <span key={e} className="rounded-md bg-surface-2 px-1.5 py-0.5 text-[11.5px] text-fg-2">{e}</span>
+            <span key={e} className="min-w-0 max-w-full rounded-md bg-surface-2 px-1.5 py-0.5 text-[11.5px] text-fg-2">{e}</span>
           ))}
           {sp.expertise.length > 3 && <span className="px-1 py-0.5 text-[11.5px] text-muted">+{sp.expertise.length - 3}</span>}
         </div>
       )}
-      <ul className="mt-auto flex flex-col gap-1 border-t border-line pt-3" style={{ marginTop: sp.expertise.length ? 12 : "auto" }}>
+      <ul className="mt-auto w-full min-w-0 flex flex-col gap-1 border-t border-line pt-3" style={{ marginTop: sp.expertise.length ? 12 : "auto" }}>
         {list.map((s) => (
           <li key={s.id} data-track={s.track} className="flex items-start gap-2 text-[12.5px]">
             <span className="tc-dot mt-[5px] h-1.5 w-1.5 shrink-0 rounded-full" aria-hidden />

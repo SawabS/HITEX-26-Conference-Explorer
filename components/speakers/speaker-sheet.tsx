@@ -45,10 +45,10 @@ function SpeakerDetail({ sp }: { sp: Speaker }) {
   const peers = coPresenters(sp.id);
 
   return (
-    <div className="flex flex-col gap-7">
+    <div className="min-w-0 flex flex-col gap-7 [overflow-wrap:anywhere]">
       <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
         <Avatar speaker={sp} size={104} priority />
-        <div className="min-w-0">
+        <div className="min-w-0 max-w-full flex-1">
           <h2 className="text-[24px] font-semibold leading-tight tracking-tight" data-autofocus tabIndex={-1}>{sp.name}</h2>
           {sp.nameKu && (
             <p className="mt-0.5 text-[14px] text-muted">
@@ -60,7 +60,7 @@ function SpeakerDetail({ sp }: { sp: Speaker }) {
             {sp.organizations.length > 0 ? (
               <span className="flex items-start gap-1.5">
                 <Building2 size={14} className="mt-0.5 shrink-0" aria-hidden />
-                <span>
+                <span className="min-w-0 flex-1">
                   {sp.organizations.map((o, i) => (
                     <span key={o}>
                       {i > 0 && " · "}
@@ -101,7 +101,7 @@ function SpeakerDetail({ sp }: { sp: Speaker }) {
           <h3 id="sp-exp" className="eyebrow mb-2">Expertise</h3>
           <div className="flex flex-wrap gap-1.5">
             {sp.expertise.map((e) => (
-              <button key={e} onClick={() => go("speakers", { expertise: e })} className="rounded-md border border-line bg-surface-2 px-2 py-1 text-[12.5px] text-fg-2 transition hover:border-line-strong hover:text-fg">
+              <button key={e} onClick={() => go("speakers", { expertise: e })} className="min-w-0 max-w-full rounded-md border border-line bg-surface-2 px-2 py-1 text-[12.5px] text-fg-2 transition hover:border-line-strong hover:text-fg">
                 {e}
               </button>
             ))}
@@ -138,12 +138,12 @@ function SpeakerDetail({ sp }: { sp: Speaker }) {
       {peers.length > 0 && (
         <section aria-labelledby="sp-peers">
           <h3 id="sp-peers" className="eyebrow mb-2">Shares the stage with</h3>
-          <ul className="grid gap-1 sm:grid-cols-2">
+          <ul className="grid min-w-0 grid-cols-1 gap-1 sm:grid-cols-2">
             {peers.map(({ speaker: p }) => (
-              <li key={p.id}>
+              <li key={p.id} className="min-w-0">
                 <button onClick={() => openSpeaker(p.slug)} className="flex w-full items-center gap-2.5 rounded-lg p-2 text-left transition hover:bg-surface-2">
                   <Avatar speaker={p} size={34} />
-                  <span className="min-w-0">
+                  <span className="min-w-0 flex-1">
                     <span className="block truncate text-[13.5px] font-medium">{p.name}</span>
                     <span className="block truncate text-[12px] text-muted">{p.organization ?? p.title ?? ""}</span>
                   </span>

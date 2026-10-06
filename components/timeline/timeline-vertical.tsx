@@ -92,9 +92,9 @@ export function TimelineVertical({ sessions, date, isMatch, probe, nowMin, onOpe
                       onClick={() => setOpen(expanded ? null : s.id)}
                       aria-expanded={expanded}
                       aria-controls={`tv-${s.id}`}
-                      className="min-w-0 flex-1 text-left"
+                      className="min-w-0 flex-1 text-left [overflow-wrap:anywhere]"
                     >
-                      <span className="flex items-center gap-1.5 text-[11.5px] text-muted">
+                      <span className="flex flex-wrap items-center gap-1.5 text-[11.5px] text-muted">
                         <TypeIcon size={13} className="tc-ink" aria-hidden />
                         {TYPE_META[s.type].label}
                         <span aria-hidden>·</span>
@@ -131,15 +131,15 @@ export function TimelineVertical({ sessions, date, isMatch, probe, nowMin, onOpe
                         transition={{ duration: reduce ? 0 : 0.22 }}
                         className="overflow-hidden"
                       >
-                        <div className="border-t border-line px-3 pb-3 pt-2.5">
+                        <div className="min-w-0 border-t border-line px-3 pb-3 pt-2.5">
                           <ul className="flex flex-col gap-2">
                             {people.map((p) => (
                               <li key={p.id} className="flex items-center gap-2.5">
                                 <Avatar speaker={p} size={32} />
-                                <span className="min-w-0 text-[13px] leading-tight">
+                                <span className="min-w-0 flex-1 break-words text-[13px] leading-tight">
                                   <span className="font-medium">{p.name}</span>
                                   {s.moderatorIds.includes(p.id) && <span className="text-muted"> · moderator</span>}
-                                  <span className="block truncate text-[12px] text-muted">{p.title}</span>
+                                  <span className="mt-1 block break-words text-[12px] leading-snug text-muted">{p.title}</span>
                                 </span>
                               </li>
                             ))}
