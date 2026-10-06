@@ -1,11 +1,11 @@
 "use client";
 /**
- * Full-screen briefing player. A crimson light field reacts to the voice while the
+ * Full-screen briefing player. Subtle navy and rose strings react to the voice while the
  * transcript is set in large white type and lit word by word. Two reading modes: Live
  * (the current sentence, karaoke style) and Transcript (the whole text by chapter, with
  * click-to-seek and follow-along scrolling). Chapters link each passage to its session.
  */
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { AudioLines, ChevronDown, Loader2, Pause, Play, RotateCcw, RotateCw, SkipBack, SkipForward, TextQuote } from "lucide-react";
 import { useCallback, useEffect, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from "react";
 import { AvatarStack } from "@/components/ui/avatar";
@@ -185,51 +185,49 @@ function LiveTranscript({ ep }: { ep: Episode }) {
   const wi = useTimeSelect((t) => wordAt(ep, t + LEAD));
   const ended = useTimeSelect((t) => t >= ep.duration - 0.3);
   const si = sentenceOf(ep, wi);
-  const [a, b] = ep.sentences[si];
-  const words = ep.words.slice(a, b + 1);
-  const count = words.length;
-  const size = count > 30 ? "text-[22px] sm:text-[30px] lg:text-[38px]" : count > 20 ? "text-[24px] sm:text-[34px] lg:text-[44px]" : "text-[27px] sm:text-[40px] lg:text-[52px]";
-  const sentenceText = (i: number) => {
-    const s = ep.sentences[i];
-    return s ? ep.words.slice(s[0], s[1] + 1).map((w) => w.text).join(" ") : "";
-  };
+  const reduce = useReducedMotion();
+  const visible = [si - 1, si, si + 1].filter((i) => i >= 0 && i < ep.sentences.length);
 
   return (
-    <div className="mx-auto flex h-full w-full max-w-[1040px] flex-col justify-center px-5 md:px-10">
-      <p aria-hidden className="mb-5 line-clamp-2 max-w-[60ch] text-[14px] leading-snug text-white/35 transition-all sm:text-[16px] md:mb-8">
-        {sentenceText(si - 1)}
-      </p>
-      <AnimatePresence mode="popLayout" initial={false}>
-        <motion.p
-          key={si}
-          initial={{ opacity: 0, y: 28, filter: "blur(6px)" }}
-          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          exit={{ opacity: 0, y: -28, filter: "blur(6px)" }}
-          transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-          className={`${size} font-semibold leading-[1.16] tracking-[-0.025em] [text-wrap:pretty]`}
-          style={{ fontFamily: "var(--font-display)" }}
-        >
-          {words.map((w, k) => {
-            const i = a + k;
-            const state = ended || i < wi ? "said" : i === wi ? "now" : "next";
+    <div className="mx-auto flex h-full w-full max-w-[1040px] flex-col overflow-y-auto no-scrollbar px-5 py-4 md:px-10">
+      <div className="relative my-auto flex shrink-0 flex-col gap-4 md:gap-5">
+        <AnimatePresence mode="popLayout" initial={false}>
+          {visible.map((index) => {
+            const [a, b] = ep.sentences[index];
+            const current = index === si;
             return (
-              <span key={i}>
-                <span
-                  onClick={() => { engine.seek(w.start); engine.play(); }}
-                  className={`cursor-pointer rounded-md transition-[color,text-shadow] duration-200 ${
-                    state === "said" ? "text-white" : state === "now" ? "text-white [text-shadow:0_0_22px_rgb(255_255_255/0.55)]" : "text-white/30 hover:text-white/60"
-                  }`}
-                >
-                  {w.text}
-                </span>{" "}
-              </span>
+              <motion.p
+                key={index}
+                layout="position"
+                aria-hidden={!current}
+                initial={{ opacity: 0, y: reduce ? 0 : 16 }}
+                animate={{ opacity: current ? 1 : index > si ? 0.62 : 0.36, y: 0, scale: current ? 1 : 0.94 }}
+                exit={{ opacity: 0, y: reduce ? 0 : -16 }}
+                transition={{ duration: reduce ? 0 : 0.6, ease: [0.22, 1, 0.36, 1] }}
+                className={`origin-left text-[clamp(20px,min(3.6vw,3.8dvh),44px)] font-semibold leading-[1.2] tracking-[-0.025em] [text-wrap:pretty] ${current ? "" : "line-clamp-2"}`}
+                style={{ fontFamily: "var(--font-display)" }}
+              >
+                {ep.words.slice(a, b + 1).map((w, k) => {
+                  const i = a + k;
+                  const state = ended || i < wi ? "said" : i === wi ? "now" : "next";
+                  return (
+                    <span key={i}>
+                      <span
+                        onClick={() => { engine.seek(w.start); engine.play(); }}
+                        className={`cursor-pointer rounded-md transition-[color,text-shadow] duration-300 ${
+                          !current || state === "said" ? "text-white" : state === "now" ? "text-white [text-shadow:0_0_22px_rgb(255_255_255/0.4)]" : "text-white/65 hover:text-white/85"
+                        }`}
+                      >
+                        {w.text}
+                      </span>{" "}
+                    </span>
+                  );
+                })}
+              </motion.p>
             );
           })}
-        </motion.p>
-      </AnimatePresence>
-      <p aria-hidden className="mt-5 line-clamp-2 max-w-[60ch] text-[14px] leading-snug text-white/30 sm:text-[16px] md:mt-8">
-        {sentenceText(si + 1)}
-      </p>
+        </AnimatePresence>
+      </div>
     </div>
   );
 }

@@ -22,6 +22,7 @@ const GRAIN =
 export function Aura({ ep }: { ep: Episode | undefined }) {
   const { engine } = usePodcast();
   const refs = useRef<(HTMLDivElement | null)[]>([]);
+  const strings = useRef<(SVGPathElement | null)[]>([]);
 
   useEffect(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -49,6 +50,25 @@ export function Aura({ ep }: { ep: Episode | undefined }) {
       set(1, Math.cos(tm * 0.17) * 36 * drift, (-pitch * 70 + Math.sin(tm * 0.15) * 26) * drift, 0.82 + 0.42 * mid + 0.05 * idle, 0.46 + 0.5 * mid);
       set(2, (pitch * 90 + Math.sin(tm * 0.09) * 50) * drift, Math.cos(tm * 0.12) * 30 * drift, 0.92 + 0.3 * high, 0.5 + 0.45 * high);
       set(3, 0, -rms * 18 * drift, 0.75 + 0.6 * rms + 0.04 * idle, 0.06 + 0.18 * rms);
+      // Two tapered strings respond to the recorded voice bands and freeze when paused.
+      const phase = reduce ? 0 : engine.getTime();
+      for (let strand = 0; strand < 2; strand++) {
+        const el = strings.current[strand];
+        if (!el) continue;
+        let path = "";
+        for (let point = 0; point <= 100; point++) {
+          const x = point * 12;
+          const u = point / 100;
+          const taper = Math.sin(Math.PI * u);
+          const energy = reduce ? 0 : rms * 30 + (strand ? high : low) * 36;
+          const wave = Math.sin(u * Math.PI * 5 + phase * 2.4 + strand * 1.9)
+            + 0.3 * Math.sin(u * Math.PI * 11 - phase * 3.1 + strand);
+          const y = 110 + strand * 14 + taper * (10 + energy) * wave;
+          path += `${point ? "L" : "M"}${x},${y.toFixed(2)} `;
+        }
+        el.setAttribute("d", path);
+        el.style.opacity = (strand ? 0.38 + rms * 0.22 : 0.65 + rms * 0.25).toFixed(3);
+      }
       if (!reduce) raf = requestAnimationFrame(write);
     };
     raf = requestAnimationFrame(write);
@@ -78,6 +98,25 @@ export function Aura({ ep }: { ep: Episode | undefined }) {
       />
       <div className="absolute inset-0 opacity-[0.16] mix-blend-overlay" style={{ backgroundImage: GRAIN }} />
       <div className="absolute inset-0" style={{ background: "radial-gradient(120% 90% at 50% 42%, transparent 35%, rgb(11 11 21 / 0.65) 100%)" }} />
+      <svg aria-hidden viewBox="0 0 1200 240" preserveAspectRatio="none" className="absolute inset-x-0 bottom-[38%] h-[20%] w-full overflow-visible">
+        <defs>
+          <linearGradient id="briefing-violet-string">
+            <stop stopColor="#444780" stopOpacity="0" />
+            <stop offset="0.22" stopColor="#6465b5" />
+            <stop offset="0.72" stopColor="#596ca4" />
+            <stop offset="1" stopColor="#444780" stopOpacity="0" />
+          </linearGradient>
+          <linearGradient id="briefing-red-string">
+            <stop stopColor="#a44860" stopOpacity="0" />
+            <stop offset="0.3" stopColor="#c65c75" />
+            <stop offset="0.7" stopColor="#a44860" />
+            <stop offset="1" stopColor="#a44860" stopOpacity="0" />
+          </linearGradient>
+        </defs>
+        {["violet", "red"].map((color, i) => (
+          <path key={color} ref={(el) => { strings.current[i] = el; }} d={`M0,${110 + i * 14} L1200,${110 + i * 14}`} fill="none" stroke={`url(#briefing-${color}-string)`} strokeWidth={i ? 1.5 : 2} vectorEffect="non-scaling-stroke" />
+        ))}
+      </svg>
       <div className="absolute inset-x-0 bottom-0 h-[42%]" style={{ background: "linear-gradient(to top, rgb(11 11 21 / 0.9), rgb(11 11 21 / 0.4) 55%, transparent)" }} />
     </div>
   );
