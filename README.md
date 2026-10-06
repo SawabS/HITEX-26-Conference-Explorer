@@ -1,6 +1,6 @@
-# Hitechs 26 Conference Explorer
+# HITEX 26 Conference Explorer
 
-[Live explorer](https://SawabS.github.io/Hitechs-26-Conference-Explorer/) · [GitHub repository](https://github.com/SawabS/Hitechs-26-Conference-Explorer)
+[Live explorer](https://SawabS.github.io/HITEX-26-Conference-Explorer/) · [GitHub repository](https://github.com/SawabS/HITEX-26-Conference-Explorer)
 
 An independent research and planning interface for the HITEX 2026 conference programme (Erbil International Fairground, 6–9 October 2026). Not affiliated with HITEX.
 
@@ -93,4 +93,4 @@ URL state: `/schedule?day=2026-10-08&session=trust-no-one`, `/speakers?speaker=h
 
 Pushes to `main` build and deploy the full static Next.js app through `.github/workflows/pages.yml`. In repository Settings → Pages, select **GitHub Actions** as the source.
 
-The workflow sets `STATIC_EXPORT=1` and `NEXT_PUBLIC_BASE_PATH=/Hitechs-26-Conference-Explorer`, including this prefix for portraits, podcasts and native history navigation. For a local root deployment, omit `NEXT_PUBLIC_BASE_PATH`.
+The workflow sets `STATIC_EXPORT=1` and `NEXT_PUBLIC_BASE_PATH=/HITEX-26-Conference-Explorer`, including this prefix for portraits, podcasts and native history navigation. For a local root deployment, omit `NEXT_PUBLIC_BASE_PATH`.
