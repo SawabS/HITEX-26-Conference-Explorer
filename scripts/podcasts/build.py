@@ -1,5 +1,5 @@
 """
-Builds data/podcasts.generated.json and public/podcasts/*.m4a from the
+Builds data/podcasts.generated.json and public/podcasts/*.mp3 from the
 NotebookLM day briefings.
 
 Inputs (per episode): the original audio and <name>.tokens.json written by
@@ -8,7 +8,8 @@ Outputs: word-timed transcript (names corrected to the official agenda
 spelling), sentence ranges, chapters linked to agenda sessions, and a 30 fps
 loudness/band envelope that drives the visualiser and waveform scrubber.
 
-Usage: python3 build.py <asr_dir> <project_root>
+Usage: python3 build.py <asr_dir> <project_root> [day2 day3 day4]
+When episode names are supplied, other existing episodes are preserved.
 """
 import base64, json, re, subprocess, sys
 import numpy as np, soundfile as sf
@@ -18,11 +19,31 @@ FPS = 30
 
 EPISODES = [
     {"date": "2026-10-07", "name": "day2", "src": "HITEX_Day_2.m4a", "wrap": "Catch"},
+    {"date": "2026-10-08", "name": "day3", "src": "HITEX_Day_3.m4a", "wrap": "Don't miss"},
     {"date": "2026-10-09", "name": "day4", "src": "HITEX_Day_4.m4a", "wrap": "You know, today"},
 ]
 
 # Spoken form -> official agenda spelling. Matching is case-insensitive on whole words.
 FIX = [
+    ('Karam Al-Shakur', 'Karam Alshukur'),
+    ('Hiwa Afandi', 'Hiwa Afandy'),
+    ('KRD Pass', 'KRDPass'),
+    ('Stoan Abil', 'Doaa Nabeel'),
+    ('Shamal Al-Juhoki', 'Shamal Al-Duhoki'),
+    ('Trekhan Faraj Hamid', 'Chrakhan Faraj Hamid'),
+    ('Shakar Tayyab Nouri', 'Shkar Taib Noori'),
+    ('Ryan Suwar Suleiman', 'Rayan Swar Sulaiman'),
+    ('Sarmad Aimajid', 'Sarmad I. Majeed'),
+    ('ProTech', 'PROTEX'),
+    ('Sarkout Shaban', 'Sarkawt Shaban'),
+    ('Noor Abdul Kader', 'Noor Abdulqader'),
+    ('Heman Ibrahim', 'Hemin Ibrahim'),
+    ('Hawaz Aouni Ahmed', 'Hawraz Auny Ahmad'),
+    ('Havi Khosrawi', 'Hevi Khosrawi'),
+    ('Mohamed Al-Sada', 'Mohammed Alsada'),
+    ('Donna Mahmoud', 'Dana Mahmood'),
+    ('15.05', '15:05'),
+
     ("Hitex", "HITEX"), ("Hitech", "HITEX"), ("Herbal", "Erbil"), ("Erbil Time", "Erbil time"),
     ("Mazan Mahmoud Bayad", "Mazen Mahmoud Bayadh"), ("Maivon Hassan", "Mevan Hassan"),
     ("Allah Ibrahim Mousa", "Ala Ibrahim Musa"), ("Isra Saifullah Mustafa", "Israa Saefulla Mustafa"),
@@ -142,8 +163,14 @@ def envelope(path):
     return base64.b64encode(q.tobytes()).decode(), len(q)
 
 official = json.load(open(f"{ROOT}/data/hitex-2026.official.json"))
-eps = []
+selected = set(sys.argv[3:])
+if selected - {e["name"] for e in EPISODES}:
+    raise SystemExit("Unknown episode name")
+eps = json.load(open(f"{ROOT}/data/podcasts.generated.json"))["episodes"] if selected else []
 for ep in EPISODES:
+    if selected and ep["name"] not in selected:
+        continue
+    eps = [e for e in eps if e["date"] != ep["date"]]
     day = next(d for d in official["days"] if d["date"] == ep["date"])
     sessions = [{"id": s["id"], "title": s["title"]["en"].rstrip("."), "start": s["start"]} for s in day["sessions"]]
     tj = json.load(open(f"{ASR}/{ep['name']}.tokens.json"))
@@ -159,4 +186,4 @@ for ep in EPISODES:
         "envelope": {"fps": FPS, "channels": ["rms", "low", "mid", "high", "pitch"], "frames": frames, "data": env},
     })
     print(ep["date"], len(words), "words", len(eps[-1]["sentences"]), "sentences", [(c["title"][:24], c["w"]) for c in eps[-1]["chapters"]])
-json.dump({"generator": "scripts/podcasts/build.py", "asr": "NVIDIA Parakeet TDT 0.6B v2 (int8, sherpa-onnx)", "episodes": eps}, open(f"{ROOT}/data/podcasts.generated.json", "w"), separators=(",", ":"))
+json.dump({"generator": "scripts/podcasts/build.py", "asr": "NVIDIA Parakeet TDT 0.6B v2 (int8, sherpa-onnx)", "episodes": sorted(eps, key=lambda e: e["date"])}, open(f"{ROOT}/data/podcasts.generated.json", "w"), separators=(",", ":"))
