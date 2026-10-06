@@ -435,7 +435,7 @@ function Controls({ ep, playRef }: { ep: Episode; playRef: React.RefObject<HTMLB
           ref={playRef}
           onClick={() => engine.toggle()}
           aria-label={st.playing ? "Pause" : "Play"}
-          className="relative mx-1 inline-flex h-[68px] w-[68px] items-center justify-center rounded-full bg-white text-[#c3102f] shadow-[0_12px_40px_-8px_rgb(227_23_58/0.8)] transition hover:scale-[1.04] active:scale-95 md:h-[76px] md:w-[76px]"
+          className="relative mx-1 inline-flex h-[68px] w-[68px] items-center justify-center rounded-full bg-white text-[#394766] shadow-[0_12px_40px_-8px_rgb(66_82_126/0.35)] transition hover:scale-[1.04] active:scale-95 md:h-[76px] md:w-[76px]"
         >
           {st.waiting && st.playing ? <Loader2 size={28} className="animate-spin" /> : st.playing ? <Pause size={28} fill="currentColor" /> : <Play size={28} fill="currentColor" className="translate-x-[2px]" />}
         </button>

@@ -1,6 +1,6 @@
 "use client";
 /**
- * The briefing visualiser: soft crimson light fields that breathe with the voice.
+ * The briefing visualiser: soft navy light fields with a restrained rose accent that breathe with the voice.
  * Driven by the precomputed envelope (loudness, low/mid/high bands, pitch) sampled at the
  * playhead, so it is identical on every device and needs no Web Audio graph. Transforms are
  * written straight to the DOM each frame; React never re-renders for animation.
@@ -10,10 +10,10 @@ import { sampleEnvelope, type Episode } from "@/lib/podcasts";
 import { usePodcast } from "./podcast-provider";
 
 const BLOBS = [
-  { color: "227 23 58", size: 95, left: -28, top: 30 },
-  { color: "255 92 60", size: 70, left: 55, top: -22 },
-  { color: "176 18 74", size: 80, left: 28, top: 58 },
-  { color: "255 110 130", size: 56, left: 22, top: 14 },
+  { color: "49 61 105", size: 95, left: -28, top: 30 },
+  { color: "61 82 125", size: 70, left: 55, top: -22 },
+  { color: "60 54 99", size: 80, left: 28, top: 58 },
+  { color: "156 68 89", size: 34, left: 22, top: 14 },
 ];
 
 const GRAIN =
@@ -48,7 +48,7 @@ export function Aura({ ep }: { ep: Episode | undefined }) {
       set(0, Math.sin(tm * 0.13) * 40 * drift, Math.cos(tm * 0.11) * 24 * drift, 0.9 + 0.32 * low + 0.06 * idle, 0.72 + 0.28 * rms);
       set(1, Math.cos(tm * 0.17) * 36 * drift, (-pitch * 70 + Math.sin(tm * 0.15) * 26) * drift, 0.82 + 0.42 * mid + 0.05 * idle, 0.46 + 0.5 * mid);
       set(2, (pitch * 90 + Math.sin(tm * 0.09) * 50) * drift, Math.cos(tm * 0.12) * 30 * drift, 0.92 + 0.3 * high, 0.5 + 0.45 * high);
-      set(3, 0, -rms * 18 * drift, 0.75 + 0.6 * rms + 0.04 * idle, 0.16 + 0.6 * rms);
+      set(3, 0, -rms * 18 * drift, 0.75 + 0.6 * rms + 0.04 * idle, 0.06 + 0.18 * rms);
       if (!reduce) raf = requestAnimationFrame(write);
     };
     raf = requestAnimationFrame(write);
@@ -56,7 +56,7 @@ export function Aura({ ep }: { ep: Episode | undefined }) {
   }, [engine, ep]);
 
   return (
-    <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden" style={{ background: "linear-gradient(165deg, #3a0814 0%, #1a0710 48%, #33081a 100%)" }}>
+    <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden" style={{ background: "linear-gradient(165deg, #13132a 0%, #0b0b15 48%, #171a2d 100%)" }}>
       {BLOBS.map((b, i) => (
         <div
           key={i}
@@ -77,8 +77,8 @@ export function Aura({ ep }: { ep: Episode | undefined }) {
         style={{ backgroundImage: "linear-gradient(rgb(255 255 255 / 1) 1px, transparent 1px), linear-gradient(90deg, rgb(255 255 255 / 1) 1px, transparent 1px)", backgroundSize: "56px 56px" }}
       />
       <div className="absolute inset-0 opacity-[0.16] mix-blend-overlay" style={{ backgroundImage: GRAIN }} />
-      <div className="absolute inset-0" style={{ background: "radial-gradient(120% 90% at 50% 42%, transparent 35%, rgb(10 4 10 / 0.55) 100%)" }} />
-      <div className="absolute inset-x-0 bottom-0 h-[42%]" style={{ background: "linear-gradient(to top, rgb(14 4 10 / 0.8), rgb(14 4 10 / 0.3) 55%, transparent)" }} />
+      <div className="absolute inset-0" style={{ background: "radial-gradient(120% 90% at 50% 42%, transparent 35%, rgb(11 11 21 / 0.65) 100%)" }} />
+      <div className="absolute inset-x-0 bottom-0 h-[42%]" style={{ background: "linear-gradient(to top, rgb(11 11 21 / 0.9), rgb(11 11 21 / 0.4) 55%, transparent)" }} />
     </div>
   );
 }
@@ -106,8 +106,8 @@ export function VoiceOrb({ ep, size = 40, className = "" }: { ep: Episode | unde
   }, [engine, ep]);
   return (
     <span aria-hidden className={`relative inline-flex shrink-0 items-center justify-center ${className}`} style={{ width: size, height: size }}>
-      <span ref={ring} className="absolute inset-0 rounded-full bg-[radial-gradient(closest-side,rgb(255_77_102/0.9),rgb(227_23_58/0.35)_60%,transparent)] opacity-30" />
-      <span className="relative h-[46%] w-[46%] rounded-full bg-[radial-gradient(circle_at_35%_30%,#ffb3bf,#e3173a_55%,#7a0a22)] shadow-[0_0_18px_rgb(227_23_58/0.7)]" />
+      <span ref={ring} className="absolute inset-0 rounded-full bg-[radial-gradient(closest-side,rgb(126_147_194/0.5),rgb(67_81_126/0.2)_60%,transparent)] opacity-30" />
+      <span className="relative h-[46%] w-[46%] rounded-full bg-[radial-gradient(circle_at_35%_30%,#c2cce5,#6276a4_55%,#303952)] shadow-[0_0_18px_rgb(91_112_163/0.3)]" />
     </span>
   );
 }

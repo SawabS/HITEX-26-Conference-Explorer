@@ -51,7 +51,7 @@ function BriefingCard({ ep }: { ep: Episode }) {
           {bars.map((b, i) => <span key={i} className="w-[2px] rounded-full bg-white/45" style={{ height: `${Math.max(12, b * 100)}%` }} />)}
         </span>
         {ep.available && (
-          <span className={`inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white text-[#c3102f] shadow-[0_10px_30px_-8px_rgb(227_23_58/0.9)] transition group-hover:scale-105`}>
+          <span className={`inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-white text-[#394766] shadow-[0_10px_30px_-8px_rgb(66_82_126/0.35)] transition group-hover:scale-105`}>
             {playing ? <Pause size={20} fill="currentColor" /> : <Play size={20} fill="currentColor" className="translate-x-px" />}
           </span>
         )}
@@ -103,9 +103,9 @@ export function ScheduleListenButton({ date }: { date: string }) {
   return (
     <button
       onClick={() => open(date, { autoplay: true })}
-      className="no-print mt-5 inline-flex h-10 items-center gap-2.5 rounded-full bg-white pl-1.5 pr-4 text-[13.5px] font-semibold text-[#16050c] shadow-[0_10px_30px_-10px_rgb(227_23_58/0.9)] transition hover:-translate-y-0.5"
+      className="no-print mt-5 inline-flex h-10 items-center gap-2.5 rounded-full bg-white pl-1.5 pr-4 text-[13.5px] font-semibold text-[#16050c] shadow-[0_10px_30px_-10px_rgb(66_82_126/0.35)] transition hover:-translate-y-0.5"
     >
-      <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-[#e3173a] text-white"><Headphones size={15} /></span>
+      <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-[#52658e] text-white"><Headphones size={15} /></span>
       Listen to the Day {ep.dayNumber} briefing
       <span className="mono font-normal text-[#16050c]/60">{fmtClock(ep.duration)}</span>
     </button>

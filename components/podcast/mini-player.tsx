@@ -35,7 +35,7 @@ export function MiniPlayer() {
           role="region"
           aria-label="Briefing player"
         >
-          <div className="relative overflow-hidden rounded-2xl bg-[linear-gradient(120deg,#3a0714,#1a0a18_60%,#13132a)] text-white shadow-[0_18px_50px_-12px_rgb(0_0_0/0.8)] ring-1 ring-white/12">
+          <div className="relative overflow-hidden rounded-2xl bg-[linear-gradient(120deg,#181b30,#10111f_60%,#13132a)] text-white shadow-[0_18px_50px_-12px_rgb(0_0_0/0.8)] ring-1 ring-white/12">
             <div className="flex items-center gap-2.5 p-2.5 pr-2">
               <button onClick={() => open(ep.date, { autoplay: false })} className="flex min-w-0 flex-1 items-center gap-2.5 text-left" aria-label="Open full-screen player">
                 <VoiceOrb ep={ep} size={40} />
@@ -55,7 +55,7 @@ export function MiniPlayer() {
               </button>
             </div>
             <span aria-hidden className="absolute inset-x-0 bottom-0 h-[2px] bg-white/10">
-              <span ref={bar} className="absolute inset-0 origin-left bg-[#ff4d66]" style={{ transform: "scaleX(0)" }} />
+              <span ref={bar} className="absolute inset-0 origin-left bg-[#8b9cc3]" style={{ transform: "scaleX(0)" }} />
             </span>
           </div>
         </motion.div>
